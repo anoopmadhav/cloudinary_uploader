@@ -40,7 +40,12 @@ defmodule CloudinaryUploader.Uploader do
   defp call(opts) do
     if(is_nil(Application.get_env(:cloudinary_uploader, :cloud_name)), do: raise(ParseError, message: "cloudinary cloud_name is not set in application variables"))
     url = "#{@base_url}#{Application.get_env(:cloudinary_uploader, :cloud_name)}/#{Map.get(opts, :resource_type)}/upload"
-    HTTPoison.request!(:post, url, Poison.encode!(opts), @cloudinary_headers)
+    options = if is_nil(Application.get_env(:cloudinary_uploader, :timeout)) do
+        []
+      else
+        [timeout: Application.get_env(:cloudinary_uploader, :timeout)]
+      end
+    HTTPoison.request!(:post, url, Poison.encode!(opts), @cloudinary_headers, options)
   end
 
   defp parse_response(response) do
