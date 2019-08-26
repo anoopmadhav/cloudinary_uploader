@@ -65,13 +65,13 @@ defmodule CloudinaryUploader.Preparator do
   end
 
   defp prepare_request_body(map) do
-    map = if is_nil(Map.get(map, :resource_type)) do 
+    map = if is_nil(Map.get(map, :resource_type)) do
       Map.put(map, :resource_type, @default_resource_type)
     else
       map
     end
     if(is_nil(Application.get_env(:cloudinary_uploader, :api_key)), do: raise(ParseError, message: "cloudinary api_key is not set in application variables"))
-    Map.merge(map, 
+    Map.merge(map,
       %{
       api_key: to_string(Application.get_env(:cloudinary_uploader, :api_key)),
       timestamp: :os.system_time(:second)
