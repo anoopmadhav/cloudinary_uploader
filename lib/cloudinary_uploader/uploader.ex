@@ -50,7 +50,7 @@ defmodule CloudinaryUploader.Uploader do
 
   defp parse_response(response) do
     %HTTPoison.Response{body: response, status_code: status_code} = response
-    if(status_code == 200) do
+    if status_code == 200 do
       response
       |> Poison.decode!()
       |> Map.new(fn {key, value} -> {String.to_atom(key), value} end)
@@ -72,5 +72,5 @@ defmodule CloudinaryUploader.UploadError do
 
   def message(%{message: message, status_code: status_code}) do
     "upload returned status_code #{status_code} with error message #{message}"
-  end 
+  end
 end
