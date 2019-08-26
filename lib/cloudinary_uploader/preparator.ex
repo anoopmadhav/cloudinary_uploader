@@ -17,8 +17,8 @@ defmodule CloudinaryUploader.Preparator do
 
   @default_resource_type :image
 
-  @typep file :: string
-  @typep public_id :: string
+  @typep file :: charlist
+  @typep public_id :: charlist
   @typep resource_type :: :image | :video | :auto
 
   @type options :: %{
