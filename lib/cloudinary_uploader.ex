@@ -3,8 +3,8 @@ defmodule CloudinaryUploader do
   @moduledoc @readme_path |> File.read!() |> String.trim()
 
   alias CloudinaryUploader.{Preparator, ParseError}
-  alias CloudinaryUploader.{Uploader, UploadError}
   alias CloudinaryUploader.{Response}
+  alias CloudinaryUploader.{Uploader, UploadError}
 
   @doc """
   Upload a image to cloudinary.

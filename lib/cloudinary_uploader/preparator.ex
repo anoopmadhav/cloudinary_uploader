@@ -91,5 +91,5 @@ defmodule CloudinaryUploader.ParseError do
 
   def message(%{message: message}) do
     message
-  end 
+  end
 end

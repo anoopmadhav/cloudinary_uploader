@@ -1,4 +1,5 @@
 defmodule CloudinaryUploader.Response do
+  @moduledoc false
 
   @type t :: %__MODULE__{
     audio: map | nil,
