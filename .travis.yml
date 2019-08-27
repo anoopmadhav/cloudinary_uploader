@@ -25,7 +25,6 @@ install:
 script:
   - mix format --check-formatted
   - mix credo --strict
-  - mix test
 
 before_cache:
   - mix deps.clean --all --build
