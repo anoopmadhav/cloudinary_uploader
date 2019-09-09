@@ -7,7 +7,7 @@ defmodule CloudinaryUploader.Mixfile do
       version: "0.1.0",
       elixir: "~> 1.5",
       description: description(),
-      start_permanent: Mix.env == :prod,
+      start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package()
     ]
@@ -27,7 +27,8 @@ defmodule CloudinaryUploader.Mixfile do
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
       {:httpoison, "~> 0.13"},
       {:poison, "~> 3.1.0"},
-      {:ex_doc, "~> 0.18.0", only: :dev}
+      {:ex_doc, "~> 0.18.0", only: :dev},
+      {:credo, "~> 1.1.0", only: :dev, runtime: false}
     ]
   end
 

@@ -17,8 +17,8 @@ defmodule CloudinaryUploader.Preparator do
 
   @default_resource_type :image
 
-  @typep file :: string
-  @typep public_id :: string
+  @typep file :: charlist
+  @typep public_id :: charlist
   @typep resource_type :: :image | :video | :auto
 
   @type options :: %{
@@ -36,7 +36,7 @@ defmodule CloudinaryUploader.Preparator do
   end
 
   defp validate_map(map) do
-    Enum.each(map, fn{key, value} -> validate(key, value) end)
+    Enum.each(map, fn {key, value} -> validate(key, value) end)
     map
   end
 
@@ -57,7 +57,9 @@ defmodule CloudinaryUploader.Preparator do
   end
 
   defp process_value(:resource_type, value) do
-    unless(Enum.member?(@resource_types, value), do: raise(ParseError, message: "#{Atom.to_string(value)} not a valid resource_type"))
+    unless(Enum.member?(@resource_types, value),
+      do: raise(ParseError, message: "#{Atom.to_string(value)} not a valid resource_type")
+    )
   end
 
   defp process_value(:public_id, value) do
@@ -65,16 +67,22 @@ defmodule CloudinaryUploader.Preparator do
   end
 
   defp prepare_request_body(map) do
-    map = if is_nil(Map.get(map, :resource_type)) do 
-      Map.put(map, :resource_type, @default_resource_type)
-    else
-      map
-    end
-    if(is_nil(Application.get_env(:cloudinary_uploader, :api_key)), do: raise(ParseError, message: "cloudinary api_key is not set in application variables"))
-    Map.merge(map, 
+    map =
+      if is_nil(Map.get(map, :resource_type)) do
+        Map.put(map, :resource_type, @default_resource_type)
+      else
+        map
+      end
+
+    if(is_nil(Application.get_env(:cloudinary_uploader, :api_key)),
+      do: raise(ParseError, message: "cloudinary api_key is not set in application variables")
+    )
+
+    Map.merge(
+      map,
       %{
-      api_key: to_string(Application.get_env(:cloudinary_uploader, :api_key)),
-      timestamp: :os.system_time(:second)
+        api_key: to_string(Application.get_env(:cloudinary_uploader, :api_key)),
+        timestamp: :os.system_time(:second)
       }
     )
   end
@@ -91,5 +99,5 @@ defmodule CloudinaryUploader.ParseError do
 
   def message(%{message: message}) do
     message
-  end 
+  end
 end

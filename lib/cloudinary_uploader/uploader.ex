@@ -13,14 +13,17 @@ defmodule CloudinaryUploader.Uploader do
   def upload(body) do
     body
     |> sign()
-    |> (&(Map.merge(%{signature: &1}, body))).()
+    |> (&Map.merge(%{signature: &1}, body)).()
     |> call()
     |> parse_response()
     |> (&struct(%Response{}, &1)).()
   end
 
   defp sign(map) do
-    if(is_nil(Application.get_env(:cloudinary_uploader, :api_secret)), do: raise(ParseError, message: "cloudinary api_secret is not set in application variables"))
+    if(is_nil(Application.get_env(:cloudinary_uploader, :api_secret)),
+      do: raise(ParseError, message: "cloudinary api_secret is not set in application variables")
+    )
+
     map
     |> Map.drop([:api_key, :file, :resource_type])
     |> Enum.map(fn {key, value} -> "#{key}=#{value}" end)
@@ -38,27 +41,39 @@ defmodule CloudinaryUploader.Uploader do
   end
 
   defp call(opts) do
-    if(is_nil(Application.get_env(:cloudinary_uploader, :cloud_name)), do: raise(ParseError, message: "cloudinary cloud_name is not set in application variables"))
-    url = "#{@base_url}#{Application.get_env(:cloudinary_uploader, :cloud_name)}/#{Map.get(opts, :resource_type)}/upload"
-    options = if is_nil(Application.get_env(:cloudinary_uploader, :timeout)) do
+    if(is_nil(Application.get_env(:cloudinary_uploader, :cloud_name)),
+      do: raise(ParseError, message: "cloudinary cloud_name is not set in application variables")
+    )
+
+    url =
+      "#{@base_url}#{Application.get_env(:cloudinary_uploader, :cloud_name)}/#{
+        Map.get(opts, :resource_type)
+      }/upload"
+
+    options =
+      if is_nil(Application.get_env(:cloudinary_uploader, :timeout)) do
         []
       else
         [timeout: Application.get_env(:cloudinary_uploader, :timeout)]
       end
+
     HTTPoison.request!(:post, url, Poison.encode!(opts), @cloudinary_headers, options)
   end
 
   defp parse_response(response) do
     %HTTPoison.Response{body: response, status_code: status_code} = response
-    if(status_code == 200) do
+
+    if status_code == 200 do
       response
       |> Poison.decode!()
       |> Map.new(fn {key, value} -> {String.to_atom(key), value} end)
     else
-      raise(UploadError, message: Poison.decode!(response)["error"]["message"], status_code: status_code)
+      raise(UploadError,
+        message: Poison.decode!(response)["error"]["message"],
+        status_code: status_code
+      )
     end
   end
-
 end
 
 defmodule CloudinaryUploader.UploadError do
@@ -72,5 +87,5 @@ defmodule CloudinaryUploader.UploadError do
 
   def message(%{message: message, status_code: status_code}) do
     "upload returned status_code #{status_code} with error message #{message}"
-  end 
+  end
 end
