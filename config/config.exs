@@ -21,9 +21,9 @@ use Mix.Config
 #     config :logger, level: :info
 #
 config :cloudinary_uploader,
-  api_key: "${API_KEY}",
-  api_secret: "${API_SECRET}",
-  cloud_name: "${CLOUD_NAME}",
+  api_key: System.get_env("API_KEY"),
+  api_secret: System.get_env("API_SECRET"),
+  cloud_name: System.get_env("CLOUD_NAME"),
   timeout: 500
 
 # It is also possible to import configuration files, relative to this
