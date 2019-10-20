@@ -24,7 +24,7 @@ config :cloudinary_uploader,
   api_key: System.get_env("API_KEY"),
   api_secret: System.get_env("API_SECRET"),
   cloud_name: System.get_env("CLOUD_NAME"),
-  timeout: 500
+  timeout: 2000
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment
